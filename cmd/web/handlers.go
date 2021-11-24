@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"html/template"
+	"log"
 	"net/http"
 	"strconv"
 )
@@ -12,13 +14,32 @@ func home(w http.ResponseWriter,r *http.Request) {
 		return
 	}
 
-	w.Write([]byte("Welcome to Snippetbox"))
+	files :=[]string{
+		"./ui/html/home.page.tmpl",
+		"./ui/html/base.layout.tmpl",
+		"./ui/html/footer.partial.tmpl",
+	}
+	ts,err := template.ParseFiles(files...)
+
+	if err != nil {
+		log.Println(err.Error())
+		http.Error(w,"Internal server error",500)
+		return
+	}
+
+	err = ts.Execute(w,nil)
+	if err != nil {
+		log.Println(err.Error())
+		http.Error(w,"Internal server error",500)
+		return
+	}
 }
 
 func createSnippet(w http.ResponseWriter,r *http.Request) {
 	if r.Method != "POST" {
 		w.Header().Set("Allow","POST")
 		http.Error(w,"Method not supported",405)
+		return
 	}
 
 	w.Write([]byte("Creating a snippet..."))
@@ -31,5 +52,5 @@ func showSnippet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Fprint(w,"Selecting snippet with ID= %d...",id)
+	fmt.Fprintf(w,"Selecting snippet with ID=%d",id)
 }

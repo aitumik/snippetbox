@@ -1,0 +1,20 @@
+{{ define "base"}}
+    <!DOCTYPE html>
+    <htm>
+        <head>
+            <title>{{ template "title" . }} - Snippetbox</title>
+        </head>
+        <body>
+            <header>
+                <h1><a href='/'>Snippetbox</a></h1>
+            </header>
+            <nav>
+                <a href="/">Home</a>
+            </nav>
+            <section>
+                {{ template "body" . }}
+            </section>
+                {{ template "footer" . }}
+        </body>
+    </htm>
+{{end}}
