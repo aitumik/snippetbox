@@ -5,17 +5,33 @@ import (
 	"net/http"
 )
 
-// note that this will handle all the request
-// even if you visit the http://localhost:4000/foo/bar
-// it will still be handled by this handler
-func home(w http.ResponseWriter,r *http.Request) {
-	w.Write([]byte("Hello world from Snippetbox"));
+func home(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/" {
+		http.NotFound(w,r)
+		return
+	}
+	w.Write([]byte("Hello from snippetbox"))
+}
+
+func showSnippet(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Show snippet..."))
+}
+
+func createSnippet(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "POST" {
+		w.WriteHeader(405)
+		w.Write([]byte("Method not found"))
+		return
+	}
+	w.Write([]byte("Create snippet...."))
 }
 
 func main() {
-	mux := http.NewServeMux()
+	mux := http.NewServeMux();
 	mux.HandleFunc("/",home)
-	log.Println("Starting server at :4000")
+	mux.HandleFunc("/snippet",showSnippet)
+	mux.HandleFunc("/snippet/create",createSnippet)
+	log.Println("Server started at :4000")
 	err := http.ListenAndServe(":4000",mux)
 	log.Fatal(err)
 }
