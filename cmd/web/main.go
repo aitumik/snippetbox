@@ -40,6 +40,6 @@ func main() {
 		ErrorLog: errorLogger,
 		Handler: mux,
 	}
-	err = server.ListenAndServe()
+	err := server.ListenAndServe()
 	errorLogger.Fatal(err)
 }
