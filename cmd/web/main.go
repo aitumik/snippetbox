@@ -21,16 +21,9 @@ func main() {
 	flag.StringVar(&cfg.StaticDir,"static-dir","./ui/static","Path to static assets")
 	flag.Parse()
 
-
-	f,err := os.OpenFile("/tmp/info.log",os.O_CREATE|os.O_RDWR,0666)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	defer f.Close()
 	// create loggers
-	errorLogger := log.New(os.Stderr,"ERROR\t",log.Ldate|log.Ltime)
-	infoLogger := log.New(f,"INFO\t",log.Ldate|log.Ltime|log.Lshortfile|log.Llongfile)
+	infoLogger := log.New(os.Stdout,"ERROR\t",log.Ldate|log.Ltime)
+	errorLogger := log.New(os.Stderr,"INFO\t",log.Ldate|log.Ltime|log.Lshortfile|log.Llongfile)
 
 	app := &application{
 		errorLogger: errorLogger,
