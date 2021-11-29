@@ -15,5 +15,10 @@ go build  .
 ./snippetbox
 ```
 
+## Tools
+* SQLlite
+* Go
+* Javascript
+
 # Contributing
 
