@@ -11,6 +11,21 @@ Install go for Mac OS(Catalina is what I used)
 Install go for Ubuntu(Tested with ubuntu 20.4)
 `sudo apt install go`
 
+Clone the repository
+`git clone https://github.com/aitumik/snippetbox`
+
+Change directory
+`cd snippetbox`
+
+Run the application
+`go run cmd/web/*`
+
+Or build the app
+```
+go build  .
+./snippetbox
+```
+
 ### Todo
 - [ ] Add search capabilities by integrating with elasticsearch
 - [ ] Oauth2 for authentication
@@ -19,16 +34,12 @@ Install go for Ubuntu(Tested with ubuntu 20.4)
 ### In Progress
 - [ ] Add middlewares
 - [ ] Dockerize the application
+- [ ] Panic recovery middleware
 
 ### Done ✓
 - [x] Cache templates for faster rendering
+- [x] Request logging middleware implemented
 
-Running the app
-```
-cd snippetbox
-go build  .
-./snippetbox
-```
 
 ## Tools
 * SQLLite
