@@ -3,9 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/aitumik/snippetbox/pkg/models"
-	"html/template"
 	"net/http"
-	"path/filepath"
 	"strconv"
 )
 
@@ -23,30 +21,30 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	// create a value of struct TemplateData to hold  slice of snippets
 	data := &TemplateData{Snippets: s}
 
-	files := []string{
-		"./ui/html/home.page.tmpl",
-		"./ui/html/base.layout.tmpl",
-		"./ui/html/footer.partial.tmpl",
-	}
-	ts, err := template.ParseFiles(files...)
+	//files := []string{
+	//	"./ui/html/home.page.tmpl",
+	//	"./ui/html/base.layout.tmpl",
+	//	"./ui/html/footer.partial.tmpl",
+	//}
+	//ts, err := template.ParseFiles(files...)
+	//
+	//if err != nil {
+	//	app.errorLogger.Println(err.Error())
+	//	app.serverError(w, err)
+	//	return
+	//}
+	//
+	//path := filepath.Join("./ui/html/", "*.page.tmpl")
+	//app.infoLogger.Printf("This is the path I got from the `filepath.Join` %s", path)
+	//
+	//err = ts.Execute(w, data)
+	//if err != nil {
+	//	app.errorLogger.Println(err.Error())
+	//	app.serverError(w, err)
+	//	return
+	//}
 
-	if err != nil {
-		app.errorLogger.Println(err.Error())
-		app.serverError(w, err)
-		return
-	}
-
-	path := filepath.Join("./ui/html/", "*.page.tmpl")
-	app.infoLogger.Printf("This is the path I got from the `filepath.Join` %s", path)
-
-	err = ts.Execute(w, data)
-	if err != nil {
-		app.errorLogger.Println(err.Error())
-		app.serverError(w, err)
-		return
-	}
-
-	//app.render(w,r,"home.page.tmpl",data)
+	app.render(w,r,"home.page.tmpl",data)
 }
 
 func (app *application) createSnippet(w http.ResponseWriter, r *http.Request) {
@@ -86,21 +84,21 @@ func (app *application) showSnippet(w http.ResponseWriter, r *http.Request) {
 	// Create and instance of a TemplateData struct holding the snippet data
 	data := &TemplateData{Snippet: s}
 
-	files := []string{
-		"./ui/html/show.page.tmpl",
-		"./ui/html/base.layout.tmpl",
-		"./ui/html/footer.partial.tmpl",
-	}
-
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-
-	err = ts.Execute(w, data)
-	if err != nil {
-		app.serverError(w, err)
-	}
-	//app.render(w,r,"show.page.tmpl",data)
+	//files := []string{
+	//	"./ui/html/show.page.tmpl",
+	//	"./ui/html/base.layout.tmpl",
+	//	"./ui/html/footer.partial.tmpl",
+	//}
+	//
+	//ts, err := template.ParseFiles(files...)
+	//if err != nil {
+	//	app.serverError(w, err)
+	//	return
+	//}
+	//
+	//err = ts.Execute(w, data)
+	//if err != nil {
+	//	app.serverError(w, err)
+	//}
+	app.render(w,r,"show.page.tmpl",data)
 }

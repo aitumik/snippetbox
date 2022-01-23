@@ -46,6 +46,7 @@ func main() {
 	if err != nil {
 		errorLogger.Fatal(err)
 	}
+	infoLogger.Print("Initializing the template cache")
 
 	// Add the templateCache to the application dependencies
 	app := &application{

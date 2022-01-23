@@ -2,10 +2,14 @@ package main
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"net/http"
 	"runtime/debug"
+	"time"
 )
+
+var TemplateError = errors.New("template : template not found")
 
 func (app *application) serverError(w http.ResponseWriter, err error) {
 	trace := fmt.Sprintf("%s\n%s",err.Error(),debug.Stack())
@@ -31,6 +35,10 @@ func(app *application) render(w http.ResponseWriter,r *http.Request,name string,
 		return
 	}
 
+	if ts == nil {
+		app.errorLogger.Print("Could not find template <nil> returned")
+		app.serverError(w,TemplateError)
+	}
 	// Some more logs
 	app.infoLogger.Printf("Rendering the template %v",ts)
 
@@ -39,7 +47,7 @@ func(app *application) render(w http.ResponseWriter,r *http.Request,name string,
 	// check to see what is in the buffer
 
 	// TODO change the data being passed to the `Execute` method below
-	err := ts.Execute(buf,td)
+	err := ts.Execute(buf,app.addDefault(td,r))
 	if err != nil {
 		app.serverError(w,err)
 		return
@@ -52,5 +60,14 @@ func(app *application) render(w http.ResponseWriter,r *http.Request,name string,
 	}
 
 	app.infoLogger.Printf("Rendered %d bytes",n)
+}
+
+func (app *application) addDefault(td *TemplateData,r *http.Request) *TemplateData {
+	if td == nil {
+		td = &TemplateData{}
+	}
+
+	td.CurrentYear = time.Now().Year()
+	return td
 }
 
