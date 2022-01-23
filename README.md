@@ -48,12 +48,11 @@ Run the application
 ### In Progress
 - [ ] Add middlewares
 - [ ] Dockerize the application
-- [ ] Panic recovery middleware
 
 ### Done ✓
 - [x] Cache templates for faster rendering
 - [x] Request logging middleware implemented
-
+- [x] Panic recovery middleware
 
 ## Tools
 * SQLLite

@@ -1,6 +1,9 @@
 package main
 
-import "net/http"
+import (
+	"net/http"
+	"github.com/justinas/alice"
+)
 
 func (app *application) routes() http.Handler {
 	mux := http.NewServeMux()
@@ -13,5 +16,5 @@ func (app *application) routes() http.Handler {
 	// handle wildcard route
 	mux.Handle("/static/",http.StripPrefix("/static",fileServer))
 
-	return app.logRequest(secureHeaders(mux))
+	return alice.New(app.recoverPanic,app.logRequest,secureHeaders).Then(mux)
 }
