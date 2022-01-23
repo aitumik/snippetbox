@@ -8,6 +8,9 @@ brew install go
 sudo apt install go
 ```
 
+## TODO
+* Make sure we are rendering from the cache
+
 Running the app
 ```
 cd snippetbox

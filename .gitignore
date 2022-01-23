@@ -16,3 +16,6 @@
 
 # Editor
 .idea
+
+# Sqlite
+*.db
