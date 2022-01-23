@@ -29,18 +29,9 @@ func (app *application) notFound(w http.ResponseWriter) {
 func(app *application) render(w http.ResponseWriter,r *http.Request,name string,td *TemplateData)  {
 	ts,ok := app.templateCache[name]
 	if !ok  {
-		// if the template doesn't exist create a new template
-		app.infoLogger.Printf("Caching template %s",name)
 		app.serverError(w,fmt.Errorf("the template %s does not exists",name))
 		return
 	}
-
-	if ts == nil {
-		app.errorLogger.Print("Could not find template <nil> returned")
-		app.serverError(w,TemplateError)
-	}
-	// Some more logs
-	app.infoLogger.Printf("Rendering the template %v",ts)
 
 	buf := new(bytes.Buffer)
 
