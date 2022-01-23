@@ -7,9 +7,14 @@ Install Go
 brew install go
 sudo apt install go
 ```
+### TODO
+- [ ] Add search capabilities by integrating elasticsearch
 
-## TODO
-* Make sure we are rendering from the cache
+### In Progress
+- [ ] Add middlewares
+
+### Done ✓
+- [x] Cache templates for faster rendering
 
 Running the app
 ```
