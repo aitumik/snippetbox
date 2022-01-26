@@ -19,25 +19,30 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) createSnippet(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
-		w.Header().Set("Allow", "POST")
-		app.clientError(w, 405)
-		return
-	}
-
-	title := "Are we alone"
-	content := "Are we alone in the universe that is the question we are asking ourselves this evening"
-
-	id, err := app.snippet.Insert(title, content, "7")
+	// First wee need to call the method r.ParseForm() which loads the values of the post
+	// to the r.PostForm map
+	// We can get for example title if we do this `r.ParseForm().Get("Title")`
+	err := r.ParseForm()
 	if err != nil {
-		app.serverError(w, err)
+		app.clientError(w,http.StatusBadRequest)
 		return
 	}
-	http.Redirect(w, r, fmt.Sprintf("/snippets?id=%d", id), http.StatusSeeOther)
+
+	// load them in variables : you could use them directly also
+	title := r.PostForm.Get("title")
+	content := r.PostForm.Get("content")
+	expires := r.PostForm.Get("expires")
+
+	id,err := app.snippet.Insert(title,content,expires)
+	if err != nil {
+		app.serverError(w,err)
+		return
+	}
+	http.Redirect(w, r, fmt.Sprintf("/snippets/%d", id), http.StatusSeeOther)
 }
 
 func (app *application) createSnippetForm(w http.ResponseWriter,r *http.Request) {
-	w.Write([]byte("Creating the snippet form..."))
+	app.render(w,r,"create.page.tmpl",nil)
 }
 
 func (app *application) showSnippet(w http.ResponseWriter, r *http.Request) {
