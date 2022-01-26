@@ -5,6 +5,8 @@ import (
 	"github.com/aitumik/snippetbox/pkg/models"
 	"net/http"
 	"strconv"
+	"strings"
+	"unicode/utf8"
 )
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
@@ -36,10 +38,40 @@ func (app *application) createSnippet(w http.ResponseWriter, r *http.Request) {
 	content := r.PostForm.Get("content")
 	expires := r.PostForm.Get("expires")
 
+	errors := make(map[string]string)
+
+	// Validate the title field
+	if strings.TrimSpace(title) == "" {
+		errors["title"] = "This field cannot be blank"
+	} else if utf8.RuneCountInString(title) > 100 {
+		errors["title"] = "The field is too long(maximum is 100 characters)"
+	}
+
+	// Validate the content field
+	if strings.TrimSpace(content) == "" {
+		errors["content"] = "This field cannot be blank"
+	}
+
+	// Validate the expires field
+	if strings.TrimSpace(expires) == "" {
+		errors["expires"] = "This field cannot be blank"
+	} else if expires != "365" && expires != "7" && expires != "1" {
+		errors["expires"] = "This field is invalid"
+	}
+
+	// If there are any errors dump them
+	if len(errors) > 0 {
+		return
+	}
+
 	id,err := app.snippet.Insert(title,content,expires)
 	if err != nil {
-		app.serverError(w,err)
-		return
+		// pass back the errors and the url.Values type which is a map
+		data := &TemplateData{
+			FormErrors: errors,
+			FormData: r.PostForm,
+		}
+		app.render(w,r,"create.page.tmpl",data)
 	}
 	http.Redirect(w, r, fmt.Sprintf("/snippets/%d", id), http.StatusSeeOther)
 }
