@@ -3,6 +3,7 @@ module github.com/aitumik/snippetbox
 go 1.17
 
 require (
+	github.com/bmizerany/pat v0.0.0-20210406213842-e4b6760bdd6f
 	github.com/justinas/alice v1.2.0
 	gorm.io/driver/sqlite v1.2.6
 	gorm.io/gorm v1.22.3
