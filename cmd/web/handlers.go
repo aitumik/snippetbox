@@ -22,6 +22,9 @@ func (app *application) createSnippet(w http.ResponseWriter, r *http.Request) {
 	// First wee need to call the method r.ParseForm() which loads the values of the post
 	// to the r.PostForm map
 	// We can get for example title if we do this `r.ParseForm().Get("Title")`
+	// Note that the r.ParseForm() is limited to 10MB
+	// To change this limit use the http.MaxBytesReader()
+	r.Body = http.MaxBytesReader(w,r.Body,4096)
 	err := r.ParseForm()
 	if err != nil {
 		app.clientError(w,http.StatusBadRequest)
