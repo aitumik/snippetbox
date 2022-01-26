@@ -61,17 +61,19 @@ func (app *application) createSnippet(w http.ResponseWriter, r *http.Request) {
 
 	// If there are any errors dump them
 	if len(errors) > 0 {
-		return
-	}
-
-	id,err := app.snippet.Insert(title,content,expires)
-	if err != nil {
 		// pass back the errors and the url.Values type which is a map
 		data := &TemplateData{
 			FormErrors: errors,
 			FormData: r.PostForm,
 		}
 		app.render(w,r,"create.page.tmpl",data)
+		return
+	}
+
+	id,err := app.snippet.Insert(title,content,expires)
+	if err != nil {
+		app.serverError(w,err)
+		return
 	}
 	http.Redirect(w, r, fmt.Sprintf("/snippets/%d", id), http.StatusSeeOther)
 }
