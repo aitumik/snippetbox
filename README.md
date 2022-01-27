@@ -46,13 +46,13 @@ Run the application
 - [ ] Redis for caching (we mostly do reads,writes are minimum)
 
 ### In Progress
-- [ ] Add middlewares
 - [ ] Dockerize the application
 
 ### Done ✓
 - [x] Cache templates for faster rendering
 - [x] Request logging middleware implemented
 - [x] Panic recovery middleware
+- [x] Add middlewares
 
 ## Tools
 * SQLLite
