@@ -14,10 +14,10 @@ type SnippetModel struct {
 // Insert This will insert a new snippet into the database
 func (s *SnippetModel) Insert(title,content,expires string) (int,error) {
 	stmt := `INSERT INTO snippets(title,content,created,expires) VALUES(?,?,?,?)`
-
 	// get the current time
 	now := time.Now()
-	result,err := s.DB.Exec(stmt,title,content,now,expires)
+	later := now.Add(time.Hour * 1 * 24)
+	result,err := s.DB.Exec(stmt,title,content,now,later)
 	if err != nil {
 		return 0,nil
 	}
