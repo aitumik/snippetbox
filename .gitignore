@@ -19,4 +19,5 @@
 
 # Sqlite
 *.db
-tsl/
+
+tls/
