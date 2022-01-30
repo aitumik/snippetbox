@@ -51,6 +51,8 @@ func (app *application) createSnippet(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w,err)
 		return
 	}
+
+	app.session.Put(r,"flash","Snippet created successfully!")
 	http.Redirect(w, r, fmt.Sprintf("/snippets/%d", id), http.StatusSeeOther)
 }
 
@@ -76,8 +78,13 @@ func (app *application) showSnippet(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
+
+	flash := app.session.PopString(r,"flash")
 	// Create and instance of a TemplateData struct holding the snippet data
-	data := &TemplateData{Snippet: s}
+	data := &TemplateData{
+		Flash: flash,
+		Snippet: s,
+	}
 
 	app.render(w,r,"show.page.tmpl",data)
 }
