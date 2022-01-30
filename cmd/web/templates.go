@@ -1,9 +1,9 @@
 package main
 
 import (
+	"github.com/aitumik/snippetbox/pkg/forms"
 	"github.com/aitumik/snippetbox/pkg/models"
 	"html/template"
-	"net/url"
 	"path/filepath"
 	"time"
 )
@@ -12,8 +12,7 @@ type TemplateData struct {
 	Snippet  *models.Snippet
 	Snippets []*models.Snippet
 	CurrentYear int
-	FormData url.Values
-	FormErrors map[string]string
+	Form *forms.Form
 }
 
 func NewTemplateCache(dir string) (map[string]*template.Template, error) {
