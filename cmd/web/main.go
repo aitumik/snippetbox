@@ -56,6 +56,7 @@ func main() {
 	// as the parameter
 	session := sessions.New([]byte("s6Ndh+pPbnzHbS*+9Pk8qGWhTzbpa@ge"))
 	session.Lifetime = 12 * time.Hour
+	session.Secure = true
 
 	// Add the templateCache to the application dependencies
 	app := &application{
@@ -82,6 +83,6 @@ func main() {
 		ErrorLog: errorLogger,
 		Handler:  mux,
 	}
-	err = server.ListenAndServe()
+	err = server.ListenAndServeTLS("./tls/cert.pem","./tls/key.pem")
 	errorLogger.Fatal(err)
 }
