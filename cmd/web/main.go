@@ -1,10 +1,12 @@
 package main
 
 import (
+	"crypto/tls"
 	"flag"
 	"github.com/aitumik/snippetbox/pkg"
 	"github.com/aitumik/snippetbox/pkg/models"
 	"github.com/aitumik/snippetbox/pkg/models/mysql"
+	sqlite2 "github.com/aitumik/snippetbox/pkg/models/sqlite"
 	"github.com/golangcollege/sessions"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -22,6 +24,7 @@ type application struct {
 	cfg           *pkg.Config
 	snippet       mysql.SnippetModel
 	templateCache map[string]*template.Template
+	users *sqlite2.UserModel
 }
 
 func main() {
@@ -68,6 +71,9 @@ func main() {
 			DB: db,
 		},
 		templateCache: templateCache,
+		users: &sqlite2.UserModel{
+			DB: db,
+		},
 	}
 
 	// Do the auto migration
@@ -76,13 +82,22 @@ func main() {
 
 	mux := app.routes()
 
-	infoLogger.Printf("Server started at %s", cfg.Addr)
+	tlsConfig := &tls.Config{
+		PreferServerCipherSuites: true,
+		CurvePreferences: []tls.CurveID{tls.X25519,tls.CurveP256},
+	}
 
 	server := &http.Server{
 		Addr:     cfg.Addr,
 		ErrorLog: errorLogger,
 		Handler:  mux,
+		TLSConfig: tlsConfig,
+		IdleTimeout: time.Minute,
+		ReadTimeout: 5 * time.Second,
+		WriteTimeout: 10 * time.Second,
 	}
+
+	infoLogger.Printf("Server started at %s", cfg.Addr)
 	err = server.ListenAndServeTLS("./tls/cert.pem","./tls/key.pem")
 	errorLogger.Fatal(err)
 }

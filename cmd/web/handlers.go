@@ -85,3 +85,25 @@ func (app *application) showSnippet(w http.ResponseWriter, r *http.Request) {
 
 	app.render(w,r,"show.page.tmpl",data)
 }
+
+func (app *application) signupUserForm(w http.ResponseWriter,r *http.Request)  {
+	app.render(w,r,"signup.page.tmpl",&TemplateData{
+		Form: forms.New(nil),
+	})
+}
+
+func (app *application) signupUser(w http.ResponseWriter,r *http.Request) {
+	fmt.Fprintln(w,"Create new user")
+}
+
+func (app *application) loginUserForm(w http.ResponseWriter,r *http.Request) {
+	fmt.Fprintln(w,"Display the login form")
+}
+
+func (app *application) loginUser(w http.ResponseWriter,r *http.Request) {
+	fmt.Fprintln(w,"Authenticate and login the user")
+}
+
+func (app *application) logoutUser(w http.ResponseWriter,r *http.Request) {
+	fmt.Fprintln(w,"Logout the user...")
+}

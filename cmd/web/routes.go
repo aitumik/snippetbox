@@ -19,6 +19,13 @@ func (app *application) routes() http.Handler {
 	mux.Post("/snippets/create",dynamicMiddleware.ThenFunc(app.createSnippet))
 	mux.Get("/snippets/:id",dynamicMiddleware.ThenFunc(app.showSnippet))
 
+	// Add the five routes
+	mux.Get("/user/signup",dynamicMiddleware.ThenFunc(app.signupUserForm))
+	mux.Post("/user/signup",dynamicMiddleware.ThenFunc(app.signupUser))
+	mux.Get("/user/login",dynamicMiddleware.ThenFunc(app.loginUserForm))
+	mux.Post("/user/login",dynamicMiddleware.ThenFunc(app.loginUser))
+	mux.Post("/user/logout",dynamicMiddleware.ThenFunc(app.logoutUser))
+
 	fileServer := http.FileServer(http.Dir(app.cfg.StaticDir))
 
 	// handle wildcard route
