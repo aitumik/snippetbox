@@ -57,8 +57,8 @@ func (app *application) addDefault(td *TemplateData,r *http.Request) *TemplateDa
 	if td == nil {
 		td = &TemplateData{}
 	}
-
 	td.CurrentYear = time.Now().Year()
+	td.Flash = app.session.PopString(r,"flash")
 	return td
 }
 

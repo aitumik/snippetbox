@@ -78,11 +78,8 @@ func (app *application) showSnippet(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
-
-	flash := app.session.PopString(r,"flash")
 	// Create and instance of a TemplateData struct holding the snippet data
 	data := &TemplateData{
-		Flash: flash,
 		Snippet: s,
 	}
 
