@@ -7,16 +7,22 @@ import (
 )
 
 func (app *application) routes() http.Handler {
+
+	// standard middleware
+	standardMiddleware := alice.New(app.recoverPanic,app.logRequest,secureHeaders)
+	// dynamic middleware
+	dynamicMiddleware := alice.New(app.session.Enable)
+
 	mux := pat.New()
-	mux.Get("/",http.HandlerFunc(app.home))
-	mux.Get("/snippets/create",http.HandlerFunc(app.createSnippetForm))
-	mux.Post("/snippets/create",http.HandlerFunc(app.createSnippet))
-	mux.Get("/snippets/:id",http.HandlerFunc(app.showSnippet))
+	mux.Get("/",dynamicMiddleware.ThenFunc(app.home))
+	mux.Get("/snippets/create",dynamicMiddleware.ThenFunc(app.createSnippetForm))
+	mux.Post("/snippets/create",dynamicMiddleware.ThenFunc(app.createSnippet))
+	mux.Get("/snippets/:id",dynamicMiddleware.ThenFunc(app.showSnippet))
 
 	fileServer := http.FileServer(http.Dir(app.cfg.StaticDir))
 
 	// handle wildcard route
 	mux.Get("/static/",http.StripPrefix("/static",fileServer))
 
-	return alice.New(app.recoverPanic,app.logRequest,secureHeaders).Then(mux)
+	return standardMiddleware.Then(mux)
 }

@@ -5,17 +5,20 @@ import (
 	"github.com/aitumik/snippetbox/pkg"
 	"github.com/aitumik/snippetbox/pkg/models"
 	"github.com/aitumik/snippetbox/pkg/models/mysql"
+	"github.com/golangcollege/sessions"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"html/template"
 	"log"
 	"net/http"
 	"os"
+	"time"
 )
 
 type application struct {
 	errorLogger   *log.Logger
 	infoLogger    *log.Logger
+	session *sessions.Session
 	cfg           *pkg.Config
 	snippet       mysql.SnippetModel
 	templateCache map[string]*template.Template
@@ -26,6 +29,7 @@ func main() {
 	cfg := new(pkg.Config)
 	flag.StringVar(&cfg.Addr, "addr", ":4000", "HTTP Network Address")
 	flag.StringVar(&cfg.StaticDir, "static-dir", "./ui/static", "Path to static assets")
+	flag.StringVar(&cfg.SecretKey,"secret","s6Ndh+pPbnzHbS*+9Pk8qGWhTzbpa@ge","Secret Key")
 	flag.Parse()
 
 	// create loggers
@@ -48,10 +52,16 @@ func main() {
 	}
 	infoLogger.Print("Initializing the template cache")
 
+	// Create a new session manager using the `New` method passing the secret key
+	// as the parameter
+	session := sessions.New([]byte("s6Ndh+pPbnzHbS*+9Pk8qGWhTzbpa@ge"))
+	session.Lifetime = 12 * time.Hour
+
 	// Add the templateCache to the application dependencies
 	app := &application{
 		errorLogger: errorLogger,
 		infoLogger:  infoLogger,
+		session: session,
 		cfg:         cfg,
 		snippet: mysql.SnippetModel{
 			DB: db,
