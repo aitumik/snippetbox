@@ -1,4 +1,20 @@
 version: "3.7"
+
 services:
   db:
-    image: mysql
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'db'
+      MYSQL_USER: 'andromeda'
+      MYSQL_PASSWORD: 'andromeda'
+      MYSQL_ROOT_PASSWORD: 'andromeda'
+
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - snippetbox:/var/lib/mysql
+volumes:
+  snippetbox:
