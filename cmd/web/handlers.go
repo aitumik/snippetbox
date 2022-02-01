@@ -114,8 +114,12 @@ func (app *application) signupUser(w http.ResponseWriter,r *http.Request) {
 
 	err = app.users.Insert(form.Get("name"),form.Get("email"),form.Get("password"))
 	if err != nil {
-		app.serverError(w,err)
-		return
+		form.Errors.Add("email", "Email address already in use")
+
+		data := &TemplateData{
+			Form: form,
+		}
+		app.render(w,r,"signup.page.tmpl",data)
 	}
 
 	app.session.Put(r,"flash","Registration successful. Please login.")
