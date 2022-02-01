@@ -1,0 +1,17 @@
+{{ template "base" .}}
+
+{{define "title"}}Login{{end}}
+
+{{define "body"}}
+    <form method="POST" action="/user/login" novalidate>
+       {{with .Form}}
+           <div>
+               <label>Email:</label>
+               {{with .Errors.Get "email"}}
+                   <label class="error">{{ . }}</label>
+               {{end}}
+               <input type="email" >
+           </div>
+       {{end}}
+    </form>
+{{end}}
