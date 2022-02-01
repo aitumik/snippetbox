@@ -44,6 +44,7 @@ Run the application
 - [ ] Add search capabilities by integrating with elasticsearch
 - [ ] Oauth2 for authentication
 - [ ] Redis for caching (we mostly do reads,writes are minimum)
+- [ ] Switch to mysql database
 
 ### In Progress
 - [ ] Dockerize the application
@@ -55,7 +56,7 @@ Run the application
 - [x] Add middlewares
 
 ## Tools
-* SQLLite
+* MySQL
 * Go
 * Javascript
 * HTML and CSS 
