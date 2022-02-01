@@ -5,12 +5,19 @@
 {{define "body"}}
     <form method="POST" action="/user/login" novalidate>
        {{with .Form}}
+           {{with .Errors.Get "generic"}}
+               <div class="error">{{ . }}</div>
+           {{end}}
            <div>
                <label>Email:</label>
-               {{with .Errors.Get "email"}}
-                   <label class="error">{{ . }}</label>
-               {{end}}
-               <input type="email" >
+               <input type="email" name="email" value='{{.Get "email"}}'>
+           </div>
+           <div>
+               <label>Password:</label>
+               <input type="password" name="password">
+           </div>
+           <div>
+               <input type="submit" value="Login">
            </div>
        {{end}}
     </form>
