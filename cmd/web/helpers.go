@@ -44,21 +44,27 @@ func(app *application) render(w http.ResponseWriter,r *http.Request,name string,
 		return
 	}
 
-	n, err := buf.WriteTo(w)
+	_, err = buf.WriteTo(w)
 	if err != nil {
 		app.serverError(w,err)
 		return
 	}
-
-	app.infoLogger.Printf("Rendered %d bytes",n)
 }
 
 func (app *application) addDefault(td *TemplateData,r *http.Request) *TemplateData {
 	if td == nil {
 		td = &TemplateData{}
 	}
+
+	//add this to check if the user is authenticated
+	td.AuthenticatedUser = app.authenticatedUser(r)
+
 	td.CurrentYear = time.Now().Year()
 	td.Flash = app.session.PopString(r,"flash")
 	return td
+}
+
+func (app *application) authenticatedUser(r *http.Request) int {
+	return app.session.GetInt(r,"userID")
 }
 
