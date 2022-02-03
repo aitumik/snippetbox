@@ -15,16 +15,20 @@ func (app *application) routes() http.Handler {
 
 	mux := pat.New()
 	mux.Get("/",dynamicMiddleware.ThenFunc(app.home))
-	mux.Get("/snippets/create",dynamicMiddleware.ThenFunc(app.createSnippetForm))
-	mux.Post("/snippets/create",dynamicMiddleware.ThenFunc(app.createSnippet))
+	// protect the create snippets routes
+	mux.Get("/snippets/create",dynamicMiddleware.Append(app.requireAuthenticatedUser).ThenFunc(app.createSnippetForm))
+	mux.Post("/snippets/create",dynamicMiddleware.Append(app.requireAuthenticatedUser).ThenFunc(app.createSnippet))
+
 	mux.Get("/snippets/:id",dynamicMiddleware.ThenFunc(app.showSnippet))
 
-	// Add the five routes
+	// Add the authentication routes
 	mux.Get("/user/signup",dynamicMiddleware.ThenFunc(app.signupUserForm))
 	mux.Post("/user/signup",dynamicMiddleware.ThenFunc(app.signupUser))
 	mux.Get("/user/login",dynamicMiddleware.ThenFunc(app.loginUserForm))
 	mux.Post("/user/login",dynamicMiddleware.ThenFunc(app.loginUser))
-	mux.Post("/user/logout",dynamicMiddleware.ThenFunc(app.logoutUser))
+
+	// protect logout route. No point of logging out a user that is not logged in
+	mux.Post("/user/logout",dynamicMiddleware.Append(app.requireAuthenticatedUser).ThenFunc(app.logoutUser))
 
 	fileServer := http.FileServer(http.Dir(app.cfg.StaticDir))
 
