@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/tls"
+	"database/sql"
 	"flag"
 	"github.com/aitumik/snippetbox/pkg"
 	"github.com/aitumik/snippetbox/pkg/models"
@@ -46,7 +47,12 @@ func main() {
 		errorLogger.Fatal(err)
 	}
 
-	defer db.Close()
+	defer func(db *sql.DB) {
+		err := db.Close()
+		if err != nil {
+			errorLogger.Fatal(err)
+		}
+	}(db)
 
 	// Initialize a new template cache
 	templateCache, err := NewTemplateCache("./ui/html/")
