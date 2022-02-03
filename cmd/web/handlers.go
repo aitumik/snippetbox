@@ -138,21 +138,22 @@ func (app *application) loginUser(w http.ResponseWriter,r *http.Request) {
 		app.clientError(w,http.StatusBadRequest)
 		return
 	}
+
 	// check if the credentials are valid if not add
 	// generic error message to the form
 	form := forms.New(r.PostForm)
 	id,err := app.users.Authenticate(form.Get("email"),form.Get("password"))
 
-	//if err == models.ErrInvalidCredentials {
-	//	form.Errors.Add("generic","Wrong email or password")
-	//	app.render(w,r,"login.page.tmpl",&TemplateData{
-	//		Form: form,
-	//	})
-	//	return
-	//} else if err == nil {
-	//	app.serverError(w,err)
-	//	return
-	//}
+	if err == models.ErrInvalidCredentials {
+		form.Errors.Add("generic","Wrong email or password")
+		app.render(w,r,"login.page.tmpl",&TemplateData{
+			Form: form,
+		})
+		return
+	} else if err != nil {
+		app.serverError(w,err)
+		return
+	}
 
 	// Add the current id of the user to the session
 	app.session.Put(r,"userID",id)
