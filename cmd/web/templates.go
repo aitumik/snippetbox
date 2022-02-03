@@ -56,7 +56,10 @@ func NewTemplateCache(dir string) (map[string]*template.Template, error) {
 // humanDate function returns a nicely formatted string representation of
 // time.Time value
 func humanDate(t time.Time) string {
-	return t.Format("02 Jan 2006 at 15:04")
+	if t.IsZero() {
+		return ""
+	}
+	return t.UTC().Format("02 Jan 2006 at 15:04")
 }
 
 // Initialize the template.FuncMap value with the string-keyed map
