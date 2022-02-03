@@ -18,6 +18,10 @@ import (
 	"time"
 )
 
+type contextKey string
+
+var contextKeyUser = contextKey("user")
+
 type application struct {
 	errorLogger   *log.Logger
 	infoLogger    *log.Logger
@@ -66,6 +70,7 @@ func main() {
 	session := sessions.New([]byte("s6Ndh+pPbnzHbS*+9Pk8qGWhTzbpa@ge"))
 	session.Lifetime = 12 * time.Hour
 	session.Secure = true
+	session.SameSite = http.SameSiteStrictMode
 
 	// Add the templateCache to the application dependencies
 	app := &application{
