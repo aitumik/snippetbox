@@ -14,6 +14,17 @@ func secureHeaders(next http.Handler) http.Handler {
 	})
 }
 
+func (app *application) requireAuthenticatedUser(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if app.authenticatedUser(r) == 0 {
+			http.Redirect(w,r,"/user/login",302)
+			return
+		}
+		// call the next handler in chain
+		next.ServeHTTP(w,r)
+	})
+}
+
 func (app *application) logRequest(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// log the requests here
