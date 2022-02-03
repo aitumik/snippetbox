@@ -11,7 +11,7 @@ func (app *application) routes() http.Handler {
 	// standard middleware
 	standardMiddleware := alice.New(app.recoverPanic,app.logRequest,secureHeaders)
 	// dynamic middleware
-	dynamicMiddleware := alice.New(app.session.Enable)
+	dynamicMiddleware := alice.New(app.session.Enable,noSurf,app.authenticate)
 
 	mux := pat.New()
 	mux.Get("/",dynamicMiddleware.ThenFunc(app.home))
