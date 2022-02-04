@@ -1,6 +1,7 @@
 package main
 
 import (
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -32,5 +33,20 @@ func TestSecureHeaders(t *testing.T) {
 	xssProtection := rs.Header.Get("X-XSS-Protection")
 	if xssProtection != "1; mode=block" {
 		t.Errorf("expected %q; got %q","1; mode=block",xssProtection)
+	}
+
+	// assert that the response is 200 OK
+	if rs.StatusCode != http.StatusOK {
+		t.Errorf("expected %q; got %q",http.StatusOK,rs.StatusCode)
+	}
+
+	defer rs.Body.Close()
+	body,err := ioutil.ReadAll(rs.Body)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if string(body) != "OK" {
+		t.Errorf("want body to equal %q","OK")
 	}
 }

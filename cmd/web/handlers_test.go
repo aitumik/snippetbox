@@ -2,25 +2,30 @@ package main
 
 import (
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 )
 
 func TestPing(t *testing.T) {
-	// Initialize a new response recorder
-	rr := httptest.NewRecorder()
+	// Create a buffer to act as writer
+	//buf := new(bytes.Buffer)
+	// Create an application instance
+	app := &application{
+		infoLogger: log.New(ioutil.Discard,"",0),
+		errorLogger: log.New(ioutil.Discard,"",0),
+	}
 
-	// Initialize a dummy http request
-	r,err := http.NewRequest("GET","/",nil)
+	// Create a new test tls server
+	ts := httptest.NewTLSServer(app.routes())
+	defer ts.Close()
+
+	// Send a GET request to the test server
+	rs,err:= ts.Client().Get(ts.URL + "/ping")
 	if err != nil {
 		t.Fatal(err)
 	}
-
-	ping(rr,r)
-
-	//Inspect the response recorder
-	rs := rr.Result()
 
 	if rs.StatusCode != http.StatusOK {
 		t.Errorf("expected %q; got %q",http.StatusOK,rs.StatusCode)
