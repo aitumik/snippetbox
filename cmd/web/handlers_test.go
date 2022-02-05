@@ -18,7 +18,8 @@ func TestPing(t *testing.T) {
 	}
 
 	// Create a new test tls server
-	ts := httptest.NewTLSServer(app.routes())
+	//ts := httptest.NewTLSServer(app.routes())
+	ts := httptest.NewServer(app.routes())
 	defer ts.Close()
 
 	// Send a GET request to the test server
