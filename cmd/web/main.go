@@ -7,7 +7,7 @@ import (
 	"github.com/aitumik/snippetbox/pkg"
 	"github.com/aitumik/snippetbox/pkg/models"
 	"github.com/aitumik/snippetbox/pkg/models/mysql"
-	sqlite2 "github.com/aitumik/snippetbox/pkg/models/sqlite"
+	qlite "github.com/aitumik/snippetbox/pkg/models/sqlite"
 	"github.com/golangcollege/sessions"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -27,9 +27,17 @@ type application struct {
 	infoLogger    *log.Logger
 	session *sessions.Session
 	cfg           *pkg.Config
-	snippet       mysql.SnippetModel
+	snippet       interface{
+		Insert(title,content,expires string)(int,error)
+		Get(id int) (*models.Snippet,error)
+		Latest() ([]*models.Snippet,error)
+	}
 	templateCache map[string]*template.Template
-	users *sqlite2.UserModel
+	users interface{
+		Insert(name,email,password string) error
+		Authenticate(email,password string) (int,error)
+		Get(id int) (*models.User,error)
+	}
 }
 
 func main() {
@@ -78,11 +86,11 @@ func main() {
 		infoLogger:  infoLogger,
 		session: session,
 		cfg:         cfg,
-		snippet: mysql.SnippetModel{
+		snippet: &mysql.SnippetModel{
 			DB: db,
 		},
 		templateCache: templateCache,
-		users: &sqlite2.UserModel{
+		users: &qlite.UserModel{
 			DB: db,
 		},
 	}
