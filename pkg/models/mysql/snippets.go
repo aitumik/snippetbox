@@ -51,7 +51,7 @@ func (s *SnippetModel) Get(id int) (*models.Snippet,error){
 
 // Latest This will return the top 10 most recently created snippets
 func (s *SnippetModel) Latest() ([]*models.Snippet,error) {
-	stmt := `SELECT id,title,content,created,expires FROM snippets ORDER BY DESC LIMIT 10`
+	stmt := `SELECT id,title,content,created,expires FROM snippets`
 
 	rows,err := s.DB.Query(stmt)
 	if err != nil {
