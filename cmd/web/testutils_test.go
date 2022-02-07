@@ -4,14 +4,26 @@ import (
 	"github.com/aitumik/snippetbox/pkg"
 	"github.com/aitumik/snippetbox/pkg/models/mock"
 	"github.com/golangcollege/sessions"
+	"html"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"net/http/cookiejar"
 	"net/http/httptest"
+	"regexp"
 	"testing"
 	"time"
 )
+
+var csrfTokenRX = regexp.MustCompile(`<input type="hidden" name="csrf_token" value="{{.CSRFToken}}">`)
+
+func extractCSRFToken(t *testing.T,body []byte) string {
+	matches := csrfTokenRX.Find(body)
+	if len(matches) < 2 {
+		t.Fatal("no csrf token found in body")
+	}
+	return html.UnescapeString(string(matches[1]))
+}
 
 func newTestApplication(t *testing.T) *application {
 	templateCache,err := NewTemplateCache("./../../ui/html")
