@@ -18,9 +18,6 @@ func (s *SnippetService) ReadSnippet(id int) (*models.Snippet,error) {
 }
 
 func (s *SnippetService) CreateManySnippets(sn []*models.Snippet) error {
-	for _,x := range sn {
-		// write the snippet to the store
-	}
 	return nil
 }
 
