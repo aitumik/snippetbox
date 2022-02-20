@@ -4,6 +4,12 @@ import (
 	"crypto/tls"
 	"database/sql"
 	"flag"
+	"html/template"
+	"log"
+	"net/http"
+	"os"
+	"time"
+
 	"github.com/aitumik/snippetbox/pkg"
 	"github.com/aitumik/snippetbox/pkg/models"
 	"github.com/aitumik/snippetbox/pkg/models/mysql"
@@ -11,11 +17,6 @@ import (
 	"github.com/golangcollege/sessions"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
-	"html/template"
-	"log"
-	"net/http"
-	"os"
-	"time"
 )
 
 type contextKey string
@@ -23,20 +24,20 @@ type contextKey string
 var contextKeyUser = contextKey("user")
 
 type application struct {
-	errorLogger   *log.Logger
-	infoLogger    *log.Logger
-	session *sessions.Session
-	cfg           *pkg.Config
-	snippet       interface{
-		Insert(title,content,expires string)(int,error)
-		Get(id int) (*models.Snippet,error)
-		Latest() ([]*models.Snippet,error)
+	errorLogger *log.Logger
+	infoLogger  *log.Logger
+	session     *sessions.Session
+	cfg         *pkg.Config
+	snippet     interface {
+		Insert(title, content, expires string) (int, error)
+		Get(id int) (*models.Snippet, error)
+		Latest() ([]*models.Snippet, error)
 	}
 	templateCache map[string]*template.Template
-	users interface{
-		Insert(name,email,password string) error
-		Authenticate(email,password string) (int,error)
-		Get(id int) (*models.User,error)
+	users         interface {
+		Insert(name, email, password string) error
+		Authenticate(email, password string) (int, error)
+		Get(id int) (*models.User, error)
 	}
 }
 
@@ -45,13 +46,15 @@ func main() {
 	cfg := new(pkg.Config)
 	flag.StringVar(&cfg.Addr, "addr", ":4000", "HTTP Network Address")
 	flag.StringVar(&cfg.StaticDir, "static-dir", "./ui/static", "Path to static assets")
-	flag.StringVar(&cfg.SecretKey,"secret","s6Ndh+pPbnzHbS*+9Pk8qGWhTzbpa@ge","Secret Key")
+	flag.StringVar(&cfg.SecretKey, "secret", "s6Ndh+pPbnzHbS*+9Pk8qGWhTzbpa@ge", "Secret Key")
 	flag.Parse()
 
 	// create loggers
 	infoLogger := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	errorLogger := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile|log.Llongfile)
 
+	// TODO change to postgres
+	// TODO add elasticsearch
 	conn, err := gorm.Open(sqlite.Open("snippet.db"), &gorm.Config{})
 
 	db, err := conn.DB()
@@ -84,7 +87,7 @@ func main() {
 	app := &application{
 		errorLogger: errorLogger,
 		infoLogger:  infoLogger,
-		session: session,
+		session:     session,
 		cfg:         cfg,
 		snippet: &mysql.SnippetModel{
 			DB: db,
@@ -103,20 +106,20 @@ func main() {
 
 	tlsConfig := &tls.Config{
 		PreferServerCipherSuites: true,
-		CurvePreferences: []tls.CurveID{tls.X25519,tls.CurveP256},
+		CurvePreferences:         []tls.CurveID{tls.X25519, tls.CurveP256},
 	}
 
 	server := &http.Server{
-		Addr:     cfg.Addr,
-		ErrorLog: errorLogger,
-		Handler:  mux,
-		TLSConfig: tlsConfig,
-		IdleTimeout: time.Minute,
-		ReadTimeout: 5 * time.Second,
+		Addr:         cfg.Addr,
+		ErrorLog:     errorLogger,
+		Handler:      mux,
+		TLSConfig:    tlsConfig,
+		IdleTimeout:  time.Minute,
+		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,
 	}
 
 	infoLogger.Printf("Server started at %s", cfg.Addr)
-	err = server.ListenAndServeTLS("./tls/cert.pem","./tls/key.pem")
+	err = server.ListenAndServeTLS("./tls/cert.pem", "./tls/key.pem")
 	errorLogger.Fatal(err)
 }
