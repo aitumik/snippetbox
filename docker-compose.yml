@@ -20,7 +20,7 @@ services:
     image: dpage/pgadmin4
     environment:
       PGADMIN_DEFAULT_EMAIL: aitumik@protonmail.com
-      PG_ADMIN_DEFAULT_PASSWORD: snippetbox!@x1$$aitumik
+      PGADMIN_DEFAULT_PASSWORD : snippetbox!@x1$$aitumik
       PGADMIN_CONFIG_SERVER_MODE: 'False'
     volumes:
       - pgadmin:/var/lib/pgadmin
