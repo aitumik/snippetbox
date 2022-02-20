@@ -1,6 +1,13 @@
 version: "3.7"
 
 services:
+  snippetbox:
+    build : ./.docker/
+    image: snippetbox
+    networks:
+      - snippetbox
+    ports:
+      - "4000:4000"
   db:
     container_name: postgres
     image: postgres
@@ -35,6 +42,9 @@ services:
     environment:
       - node.name=elasticsearch
       - cluster.name=elasticsearch-cluster
+    ports:
+      - "9200:9200"
+      - "9300:9300"
 networks:
   snippetbox:
     driver: bridge
