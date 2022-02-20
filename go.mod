@@ -5,6 +5,7 @@ go 1.17
 require (
 	github.com/bmizerany/pat v0.0.0-20210406213842-e4b6760bdd6f
 	github.com/elastic/go-elasticsearch v0.0.0
+	github.com/elastic/go-elasticsearch/v8 v8.0.0
 	github.com/golangcollege/sessions v1.2.0
 	github.com/justinas/alice v1.2.0
 	github.com/justinas/nosurf v1.1.1
@@ -14,6 +15,7 @@ require (
 )
 
 require (
+	github.com/elastic/elastic-transport-go/v8 v8.0.0-alpha // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.2 // indirect
 	github.com/mattn/go-sqlite3 v1.14.9 // indirect
