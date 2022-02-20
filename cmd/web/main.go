@@ -14,6 +14,7 @@ import (
 	"github.com/aitumik/snippetbox/pkg/models"
 	"github.com/aitumik/snippetbox/pkg/models/mysql"
 	qlite "github.com/aitumik/snippetbox/pkg/models/sqlite"
+	"github.com/elastic/go-elasticsearch/v8"
 	"github.com/golangcollege/sessions"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -53,8 +54,30 @@ func main() {
 	infoLogger := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	errorLogger := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile|log.Llongfile)
 
+	// add configurations due to docker
+
+	// TODO move this to environment variables
+	esconfig := elasticsearch.Config{
+		Addresses: []string{
+			"http://localhost:9200",
+			"http://localhost:9300",
+		},
+	}
+	es, err := elasticsearch.NewClient(esconfig)
+	if err != nil {
+		errorLogger.Fatal(err)
+	}
+
+	// Test elasticsearch connnection
+	res, err := es.Info()
+	if err != nil {
+		errorLogger.Fatal(err)
+	}
+
+	// close the reader to avoid memory leaks
+	defer res.Body.Close()
+
 	// TODO change to postgres
-	// TODO add elasticsearch
 	conn, err := gorm.Open(sqlite.Open("snippet.db"), &gorm.Config{})
 
 	db, err := conn.DB()
