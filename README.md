@@ -27,7 +27,7 @@ cd snippetbox
 
 Run the application
 ```
-go run cmd/web/*
+go run cmd/web/!(*_test).go
 ```
 
 Or build the app
@@ -76,10 +76,13 @@ Open your browser and visit https://localhost:4000
 - [x] Add middlewares
 - [x] Dockerize the application
 
-## Tools
+# Tools
 * Postgres
 * ELK Stack - Elastisearch Logstash Kibana
-* Redis 
+* Redis     - Cache
+* pgAdmin   - Database client
+
+# Coverage & Benchmark tests
 
 # Contributing
 Create a pull request to be able to contribute to this project
