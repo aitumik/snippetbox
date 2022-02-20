@@ -1,21 +1,21 @@
 # Snippetbox
-Learning Go Web app development with a project
-> This application is capable of searching large number of texts since its uses lucene based elasticsearch
+Learning Go Web app development with a project.
 
 ## Setup
-#### Install Go
+Install the latest version of Go
 
-Install go for Mac OS(Catalina is what I used)
+Mac
 ```
 brew install go
 ```
 
-Install go for Ubuntu(Tested with ubuntu 20.4)
+Ubuntu
 ```
 sudo apt install go
 ```
 
 Clone the repository
+> Note that to clone the repository you need to have git installed
 ```
 git clone https://github.com/aitumik/snippetbox
 ```
@@ -32,7 +32,7 @@ go run cmd/web/*
 
 Or build the app
 ```
-go build  .
+go build  cmd/web/* -o snippetbox
 ```
 
 Run the application
@@ -40,30 +40,50 @@ Run the application
 ./snippetbox
 ```
 
+
+## Docker
+
+Make sure you have installed docker
+```
+cd snippetbox
+```
+
+Build the image
+```
+docker build -t snippetbox
+```
+
+Run the image
+```
+docker run -p 4000:4000 snippetbox
+```
+Open your browser and visit https://localhost:4000
+
+> Notice the https in the above URL
+
 ### Todo
-- [ ] Add search capabilities by integrating with elasticsearch
 - [ ] Oauth2 for authentication
 - [ ] Redis for caching (we mostly do reads,writes are minimum)
-- [ ] Switch to mysql database
 
 ### In Progress
-- [ ] Dockerize the application
+- [ ] Add search capabilities by integrating with elasticsearch
+- [ ] Switch to postgres database
 
 ### Done ✓
 - [x] Cache templates for faster rendering
 - [x] Request logging middleware implemented
 - [x] Panic recovery middleware
 - [x] Add middlewares
+- [x] Dockerize the application
 
 ## Tools
-* MySQL
-* Go
-* Javascript
-* HTML and CSS 
+* Postgres
+* ELK Stack - Elastisearch Logstash Kibana
+* Redis 
 
 # Contributing
-If you wish to contribute to this project please feel free to create a PR and tag me (https://github.com/aitumik)
-on the pull request. I will try my best to review them and merge where the standards have been met.
+Create a pull request to be able to contribute to this project
 
-> NOTE  Remember to write tests before you create a PR otherwise your PR will be discarded
+
+
 
