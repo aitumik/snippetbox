@@ -1,9 +1,6 @@
 package main
 
 import (
-	"github.com/aitumik/snippetbox/pkg"
-	"github.com/aitumik/snippetbox/pkg/models/mock"
-	"github.com/golangcollege/sessions"
 	"html"
 	"io/ioutil"
 	"log"
@@ -13,11 +10,15 @@ import (
 	"regexp"
 	"testing"
 	"time"
+
+	"github.com/aitumik/snippetbox/pkg"
+	"github.com/aitumik/snippetbox/pkg/models/mock"
+	"github.com/golangcollege/sessions"
 )
 
 var csrfTokenRX = regexp.MustCompile(`<input type="hidden" name="csrf_token" value="{{.CSRFToken}}">`)
 
-func extractCSRFToken(t *testing.T,body []byte) string {
+func extractCSRFToken(t *testing.T, body []byte) string {
 	matches := csrfTokenRX.Find(body)
 	if len(matches) < 2 {
 		t.Fatal("no csrf token found in body")
@@ -26,7 +27,7 @@ func extractCSRFToken(t *testing.T,body []byte) string {
 }
 
 func newTestApplication(t *testing.T) *application {
-	templateCache,err := NewTemplateCache("./../../ui/html")
+	templateCache, err := NewTemplateCache("./../../ui/html")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -38,12 +39,12 @@ func newTestApplication(t *testing.T) *application {
 	var snippetModel = &mock.SnippetModel{}
 
 	return &application{
-		infoLogger: log.New(ioutil.Discard,"",0),
-		errorLogger: log.New(ioutil.Discard,"",0),
-		session: session,
-		snippet: snippetModel,
+		infoLogger:    log.New(ioutil.Discard, "", 0),
+		errorLogger:   log.New(ioutil.Discard, "", 0),
+		session:       session,
+		snippet:       snippetModel,
 		templateCache: templateCache,
-		cfg: new(pkg.Config),
+		cfg:           new(pkg.Config),
 	}
 }
 
@@ -51,33 +52,32 @@ type testServer struct {
 	*httptest.Server
 }
 
-func newTestServer(t *testing.T, handler http.Handler) *testServer{
+func newTestServer(t *testing.T, handler http.Handler) *testServer {
 	ts := httptest.NewTLSServer(handler)
 
-	jar,err := cookiejar.New(nil)
+	jar, err := cookiejar.New(nil)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	ts.Client().Jar = jar
-	ts.Client().CheckRedirect = func(req *http.Request,via []*http.Request) error {
+	ts.Client().CheckRedirect = func(req *http.Request, via []*http.Request) error {
 		return http.ErrUseLastResponse
 	}
 
 	return &testServer{ts}
 }
 
-func (ts *testServer) get(t *testing.T,urlPath string) (int,http.Header,[]byte) {
-	rs,err := ts.Client().Get(ts.URL + urlPath)
+func (ts *testServer) get(t *testing.T, urlPath string) (int, http.Header, []byte) {
+	rs, err := ts.Client().Get(ts.URL + urlPath)
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer rs.Body.Close()
-	body,err := ioutil.ReadAll(rs.Body)
+	body, err := ioutil.ReadAll(rs.Body)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	return rs.StatusCode,rs.Header,body
+	return rs.StatusCode, rs.Header, body
 }
-
