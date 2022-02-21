@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"net/http"
+	"net/url"
 	"testing"
 )
 
@@ -60,10 +61,45 @@ func TestShowSnippet(t *testing.T) {
 
 func TestSignupUser(t *testing.T) {
 	app := newTestApplication(t)
-	ts  := newTestServer(t,app.routes())
+	ts := newTestServer(t, app.routes())
 	defer ts.Close()
 
-	_,_,body := ts.get(t,"/user/signup")
-	csrfToken := extractCSRFToken(t,body)
+	_, _, body := ts.get(t, "/user/signup")
+
+	//TODO fix extractCSRFToken
+	csrfToken := extractCSRFToken(t, body)
 	t.Log(csrfToken)
+
+	tests := []struct {
+		name         string
+		userName     string
+		userEmail    string
+		userPassword string
+		csrfToken    string
+		wantCode     int
+		wantBody     []byte
+	}{
+		{"Valid submission", "Aitumik", "aitumik@protonmail.com", "validPa$$word", csrfToken, http.StatusCreated, []byte("somethign")},
+		{"Invalid submission", "Saitama", "saitama@protonmail.com", "validPa$$word", csrfToken, http.StatusCreated, []byte("")},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			form := url.Values{}
+			form.Add("name", tt.userName)
+			form.Add("email", tt.userEmail)
+			form.Add("password", tt.userPassword)
+			form.Add("csrf_token", tt.csrfToken)
+
+			code, _, body := ts.postForm(t, "user/signup", form)
+
+			if code != tt.wantCode {
+				t.Errorf("want %d; got %d", tt.wantCode, code)
+			}
+
+			if !bytes.Contains(body, tt.wantBody) {
+				t.Errorf("want body %s to contain %q", body, tt.wantBody)
+			}
+		})
+	}
 }
