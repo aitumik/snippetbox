@@ -2,16 +2,14 @@ package main
 
 import (
 	"bytes"
-	"errors"
 	"fmt"
-	"github.com/aitumik/snippetbox/pkg/models"
-	"github.com/justinas/nosurf"
 	"net/http"
 	"runtime/debug"
 	"time"
-)
 
-var TemplateError = errors.New("template : template not found")
+	"github.com/aitumik/snippetbox/pkg/models"
+	"github.com/justinas/nosurf"
+)
 
 func (app *application) serverError(w http.ResponseWriter, err error) {
 	trace := fmt.Sprintf("%s\n%s", err.Error(), debug.Stack())
@@ -31,6 +29,7 @@ func (app *application) notFound(w http.ResponseWriter) {
 func (app *application) render(w http.ResponseWriter, r *http.Request, name string, td *TemplateData) {
 	ts, ok := app.templateCache[name]
 	if !ok {
+		// Good error message
 		app.serverError(w, fmt.Errorf("the template %s does not exists", name))
 		return
 	}
