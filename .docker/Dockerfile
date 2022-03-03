@@ -16,6 +16,7 @@ RUN apk --no-cache add git alpine-sdk build-base gcc
 # Expose port 4000
 EXPOSE 4000
 
+shopt -s extglob
 RUN go build -o sniper cmd/web/*
 
 CMD ["./sniper"]

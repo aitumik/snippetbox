@@ -97,6 +97,8 @@ func main() {
 		users: &qlite.UserModel{
 			DB: db,
 		},
+
+		//TODO  Add elasticsearch here
 	}
 
 	// Do the auto migration

@@ -21,11 +21,9 @@ type Snippet struct {
 }
 
 type User struct {
-	ID int `json:"id" gorm:"Column:id"`
-	Name string `json:"name" gorm:"Column:name"`
-	Email string `json:"email" gorm:"Column:email"`
+	ID             int    `json:"id" gorm:"Column:id"`
+	Name           string `json:"name" gorm:"Column:name"`
+	Email          string `json:"email" gorm:"Column:email"`
 	HashedPassword []byte `gorm:"Column:hashed_password"`
-	Created time.Time
+	Created        time.Time
 }
-
-

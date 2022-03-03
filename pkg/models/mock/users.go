@@ -6,15 +6,15 @@ import (
 )
 
 var mockUser = &models.User{
-	ID: 1,
-	Name: "Aitumik",
-	Email: "aitumik@protonmail.com",
+	ID:      1,
+	Name:    "Aitumik",
+	Email:   "aitumik@protonmail.com",
 	Created: time.Now(),
 }
 
-type UserModel struct {}
+type UserModel struct{}
 
-func (m *UserModel) Insert(name,email,password string) error{
+func (m *UserModel) Insert(name, email, password string) error {
 	switch email {
 	case "aitumik@protonmail.com":
 		return models.ErrDuplicateEmail
@@ -23,20 +23,20 @@ func (m *UserModel) Insert(name,email,password string) error{
 	}
 }
 
-func (m *UserModel) Authenticate(email,password string) (int,error) {
+func (m *UserModel) Authenticate(email, password string) (int, error) {
 	switch email {
 	case "aitumik@protonmail.com":
-		return 1,nil
+		return 1, nil
 	default:
-		return 0,models.ErrInvalidCredentials
+		return 0, models.ErrInvalidCredentials
 	}
 }
 
-func (m *UserModel) Get(id int) (*models.User,error) {
+func (m *UserModel) Get(id int) (*models.User, error) {
 	switch id {
 	case 1:
-		return mockUser,nil
+		return mockUser, nil
 	default:
-		return nil,models.ErrNoRecord
+		return nil, models.ErrNoRecord
 	}
 }

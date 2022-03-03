@@ -26,22 +26,22 @@ func TestHumanDate(t *testing.T) {
 		},
 		{
 			name: "Empty",
-			tm: time.Time{},
+			tm:   time.Time{},
 			want: "",
 		},
 		{
-			name: "EAT",// East African Time
-			tm: time.Date(2022, 2, 3, 10, 0, 0, 0, time.FixedZone("UTC+3",0)),
+			name: "EAT", // East African Time
+			tm:   time.Date(2022, 2, 3, 10, 0, 0, 0, time.FixedZone("UTC+3", 0)),
 			want: "03 Feb 2022 at 10:00",
 		},
 	}
 
-	for _,tt := range tests {
+	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			hd := humanDate(tt.tm)
 
 			if hd != tt.want {
-				t.Errorf("want %q; got %q",tt.want,hd)
+				t.Errorf("want %q; got %q", tt.want, hd)
 			}
 		})
 	}

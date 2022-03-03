@@ -13,14 +13,14 @@ func (s *SnippetService) CreateSnippet(snippet models.Snippet) error {
 	return nil
 }
 
-func (s *SnippetService) ReadSnippet(id int) (*models.Snippet,error) {
-	return nil,nil
+func (s *SnippetService) ReadSnippet(id int) (*models.Snippet, error) {
+	return nil, nil
 }
 
 func (s *SnippetService) CreateManySnippets(sn []*models.Snippet) error {
 	return nil
 }
 
-func NewSnippetService() *SnippetService{
+func NewSnippetService() *SnippetService {
 	return &SnippetService{}
 }
