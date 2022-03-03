@@ -2,11 +2,12 @@ version: "3.7"
 
 services:
   db:
-    container_name: postgres
-    image: postgres
+    container_name: snippetbox_database
+    image: postgres:11.9-alpine
     environment:
       POSTGRES_USER: snippetbox
       POSTGRES_PASSWORD: snippetbox
+      POSTGRES_DB: snippetbox
       PG_DATA: "/data/postgres"
     volumes:
       - postgres:/data/postgres
@@ -22,6 +23,10 @@ services:
       PGADMIN_DEFAULT_EMAIL: aitumik@protonmail.com
       PGADMIN_DEFAULT_PASSWORD : snippetbox!@x1$$aitumik
       PGADMIN_CONFIG_SERVER_MODE: 'False'
+    depends_on:
+      - db
+    links:
+      - db
     volumes:
       - pgadmin:/var/lib/pgadmin
     ports:

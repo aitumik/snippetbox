@@ -38,7 +38,6 @@ func (app *application) render(w http.ResponseWriter, r *http.Request, name stri
 
 	// check to see what is in the buffer
 
-	// TODO change the data being passed to the `Execute` method below
 	err := ts.Execute(buf, app.addDefault(td, r))
 	if err != nil {
 		app.serverError(w, err)

@@ -1,4 +1,4 @@
-package sqlite
+package postgres
 
 import (
 	"database/sql"
@@ -59,3 +59,4 @@ func (m *UserModel) Get(id int) (*models.User, error) {
 
 	return s, nil
 }
+

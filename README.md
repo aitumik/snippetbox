@@ -26,6 +26,7 @@ cd snippetbox
 ```
 
 Run the application
+> Note you need to enable setopts on your terminal
 ```
 go run cmd/web/!(*_test).go
 ```
@@ -78,9 +79,7 @@ Open your browser and visit https://localhost:4000
 
 # Tools
 * Postgres
-* ELK Stack - Elastisearch Logstash Kibana
-* Redis     - Cache
-* pgAdmin   - Database client
+* Elasticsearch
 
 # Coverage & Benchmark tests
 

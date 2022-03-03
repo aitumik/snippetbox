@@ -4,6 +4,7 @@ import (
 	"crypto/tls"
 	"database/sql"
 	"flag"
+	"github.com/aitumik/snippetbox/pkg/models/postgres"
 	"html/template"
 	"log"
 	"net/http"
@@ -12,8 +13,6 @@ import (
 
 	"github.com/aitumik/snippetbox/pkg"
 	"github.com/aitumik/snippetbox/pkg/models"
-	"github.com/aitumik/snippetbox/pkg/models/mysql"
-	qlite "github.com/aitumik/snippetbox/pkg/models/sqlite"
 	"github.com/golangcollege/sessions"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -90,15 +89,13 @@ func main() {
 		infoLogger:  infoLogger,
 		session:     session,
 		cfg:         cfg,
-		snippet: &mysql.SnippetModel{
+		snippet: &postgres.SnippetModel{
 			DB: db,
 		},
 		templateCache: templateCache,
-		users: &qlite.UserModel{
+		users: &postgres.UserModel{
 			DB: db,
 		},
-
-		//TODO  Add elasticsearch here
 	}
 
 	// Do the auto migration

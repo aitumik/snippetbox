@@ -21,6 +21,10 @@ func (s *SnippetService) CreateManySnippets(sn []*models.Snippet) error {
 	return nil
 }
 
+func (s *SnippetService) SearchSnippet(query string) error {
+	return nil
+}
+
 func NewSnippetService() *SnippetService {
 	return &SnippetService{}
 }

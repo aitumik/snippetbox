@@ -30,7 +30,6 @@ func (app *application) routes() http.Handler {
 	// protect logout route. No point of logging out a user that is not logged in
 	mux.Post("/user/logout", dynamicMiddleware.Append(app.requireAuthenticatedUser).ThenFunc(app.logoutUser))
 
-	// TODO add ping handler
 	mux.Get("/ping", http.HandlerFunc(ping))
 
 	fileServer := http.FileServer(http.Dir(app.cfg.StaticDir))
