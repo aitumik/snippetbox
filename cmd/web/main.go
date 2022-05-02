@@ -3,7 +3,6 @@ package main
 import (
 	"crypto/tls"
 	"database/sql"
-	"flag"
 	"github.com/aitumik/snippetbox/pkg/models/postgres"
 	"html/template"
 	"log"
@@ -14,13 +13,14 @@ import (
 	"github.com/aitumik/snippetbox/pkg"
 	"github.com/aitumik/snippetbox/pkg/models"
 	"github.com/golangcollege/sessions"
-	"gorm.io/driver/sqlite"
+	psql "gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 type contextKey string
 
 var contextKeyUser = contextKey("user")
+
 
 type application struct {
 	errorLogger *log.Logger
@@ -42,20 +42,24 @@ type application struct {
 
 func main() {
 
-	cfg := new(pkg.Config)
-	flag.StringVar(&cfg.Addr, "addr", ":4000", "HTTP Network Address")
-	flag.StringVar(&cfg.StaticDir, "static-dir", "./ui/static", "Path to static assets")
-	flag.StringVar(&cfg.SecretKey, "secret", "s6Ndh+pPbnzHbS*+9Pk8qGWhTzbpa@ge", "Secret Key")
-	flag.Parse()
+	//flag.StringVar(&cfg.Addr, "addr", ":4000", "HTTP Network Address")
+	//flag.StringVar(&cfg.StaticDir, "static-dir", "./ui/static", "Path to static assets")
+	//flag.StringVar(&cfg.SecretKey, "secret", "s6Ndh+pPbnzHbS*+9Pk8qGWhTzbpa@ge", "Secret Key")
+	//flag.Parse()
 
 	// create loggers
 	infoLogger := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	errorLogger := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile|log.Llongfile)
 
-	// add configurations due to docker
+	// Postgresql credentials
 
-	// TODO change to postgres
-	conn, err := gorm.Open(sqlite.Open("snippet.db"), &gorm.Config{})
+	cfg,err := pkg.NewConfig()
+	if err != nil {
+		errorLogger.Fatal(err)
+	}
+	dsn := cfg.DatabaseURI
+	conn,err := gorm.Open(psql.Open(dsn),&gorm.Config{})
+	//conn, err := gorm.Open(sqlite.Open("snippet.db"), dbConfig)
 
 	db, err := conn.DB()
 	if err != nil {

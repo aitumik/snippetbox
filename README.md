@@ -65,6 +65,7 @@ Open your browser and visit https://localhost:4000
 ### Todo
 - [ ] Oauth2 for authentication
 - [ ] Redis for caching (we mostly do reads,writes are minimum)
+- [ ] Kibana for analytics and visualization of data
 
 ### In Progress
 - [ ] Add search capabilities by integrating with elasticsearch

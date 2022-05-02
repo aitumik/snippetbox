@@ -1,16 +1,30 @@
 version: "3.7"
 
+networks:
+  snippetbox:
 services:
+  snippetbox:
+    container_name: snippetbox
+    build: .
+    ports:
+      - "4000:4000"
+    restart: on-failure
+    depends_on:
+      - db
+    volumes:
+      - snippetbox:/usr/src/app/
+    networks:
+      - snippetbox
   db:
     container_name: snippetbox_database
-    image: postgres:11.9-alpine
+    image: postgres
     environment:
       POSTGRES_USER: snippetbox
       POSTGRES_PASSWORD: snippetbox
       POSTGRES_DB: snippetbox
       PG_DATA: "/data/postgres"
     volumes:
-      - postgres:/data/postgres
+      - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     networks:
@@ -34,18 +48,7 @@ services:
     networks:
       - snippetbox
     restart: always
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
-    container_name: elasticsearch
-    environment:
-      - node.name=elasticsearch
-      - cluster.name=elasticsearch-cluster
-    ports:
-      - "9200:9200"
-      - "9300:9300"
-networks:
-  snippetbox:
-    driver: bridge
 volumes:
-  postgres:
+  postgres_data:
   pgadmin:
+  snippetbox:

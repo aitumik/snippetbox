@@ -4,19 +4,21 @@ MAINTAINER aitumik@protonmail.com
 # Set the neccessary environment variables
 ENV G0111MODULE=on
 
+# Create context directory
+RUN mkdir /build
+
 # Change the current directory to present directory
 WORKDIR /build
 
 # Copy everything from the current dir to present dir
-COPY . .
+COPY . /build
 
 # Install gcc dependencies
-RUN apk --no-cache add git alpine-sdk build-base gcc
+RUN apk add git alpine-sdk build-base gcc
 
 # Expose port 4000
 EXPOSE 4000
 
-shopt -s extglob
 RUN go build -o sniper cmd/web/*
 
 CMD ["./sniper"]

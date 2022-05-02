@@ -10,7 +10,7 @@ import (
 
 func TestUserModelGet(t *testing.T) {
 	if t.Short() {
-		t.Skip("postgres: skipping intergration tests")
+		t.Skip("postgres: skipping integration tests")
 	}
 
 	tests := []struct {
