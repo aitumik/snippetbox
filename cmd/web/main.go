@@ -103,6 +103,7 @@ func main() {
 
 	// Do the auto migration
 	conn.AutoMigrate(&models.Snippet{})
+	conn.AutoMigrate(&models.User{})
 	infoLogger.Print("Migrating database models")
 
 	mux := app.routes()
