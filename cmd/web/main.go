@@ -58,7 +58,6 @@ func main() {
 		errorLogger.Fatal(err)
 	}
 	dsn := cfg.DatabaseURI
-  fmt.Println(dsn)
 	conn,err := gorm.Open(psql.Open(dsn),&gorm.Config{})
 	//conn, err := gorm.Open(sqlite.Open("snippet.db"), dbConfig)
 

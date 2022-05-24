@@ -22,6 +22,9 @@
 
 tls/
 
+# Swap files
+*.swp
+
 
 snippetbox
 sniper
