@@ -16,7 +16,7 @@ func (s *SnippetModel) Insert(title, content, expires string) (int, error) {
 
 // Get this will return specific snippet based on id
 func (s *SnippetModel) Get(id int) (*models.Snippet, error) {
-	stmt := `SELECT id,title,content,created,expires FROM snippets WHERE expires > UTC_TIMESTAMP() AND id = ?`
+	stmt := `SELECT id,title,content,created,expires FROM snippets WHERE expires > UTC_TIMESTAMP() AND id = $1`
 
 	// use the query row to execute the SQL statement
 	row := s.DB.QueryRow(stmt, id)
