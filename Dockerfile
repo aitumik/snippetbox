@@ -1,4 +1,5 @@
 FROM golang:1.17.5-alpine
+
 MAINTAINER aitumik@protonmail.com
 
 # Set the neccessary environment variables
@@ -12,9 +13,11 @@ WORKDIR /build
 
 # Copy everything from the current dir to present dir
 COPY . /build
+COPY tls ./build
 
 # Install gcc dependencies
 RUN apk add git alpine-sdk build-base gcc
+
 
 # Expose port 4000
 EXPOSE 4000

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"crypto/tls"
 	"database/sql"
 	"github.com/aitumik/snippetbox/pkg/models/postgres"
 	"html/template"
@@ -9,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"time"
+  "fmt"
 
 	"github.com/aitumik/snippetbox/pkg"
 	"github.com/aitumik/snippetbox/pkg/models"
@@ -58,6 +58,7 @@ func main() {
 		errorLogger.Fatal(err)
 	}
 	dsn := cfg.DatabaseURI
+  fmt.Println(dsn)
 	conn,err := gorm.Open(psql.Open(dsn),&gorm.Config{})
 	//conn, err := gorm.Open(sqlite.Open("snippet.db"), dbConfig)
 
@@ -108,22 +109,23 @@ func main() {
 
 	mux := app.routes()
 
-	tlsConfig := &tls.Config{
-		PreferServerCipherSuites: true,
-		CurvePreferences:         []tls.CurveID{tls.X25519, tls.CurveP256},
-	}
+	//tlsConfig := &tls.Config{
+	//	PreferServerCipherSuites: true,
+	//	CurvePreferences:         []tls.CurveID{tls.X25519, tls.CurveP256},
+	//}
 
 	server := &http.Server{
 		Addr:         cfg.Addr,
 		ErrorLog:     errorLogger,
 		Handler:      mux,
-		TLSConfig:    tlsConfig,
+		//TLSConfig:    tlsConfig,
 		IdleTimeout:  time.Minute,
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,
 	}
 
 	infoLogger.Printf("Server started at %s", cfg.Addr)
-	err = server.ListenAndServeTLS("./tls/cert.pem", "./tls/key.pem")
+	//err = server.ListenAndServeTLS("./tls/cert.pem", "./tls/key.pem")
+	err = server.ListenAndServe()
 	errorLogger.Fatal(err)
 }
