@@ -16,7 +16,7 @@ func (m *UserModel) Insert(name, email, password string) error {
 		return err
 	}
 
-	stmt := `INSERT INTO users(name,email,hashed_password,created) VALUES(?,?,?,TIME())`
+	stmt := `INSERT INTO users (name,email,hashed_password,created) VALUES($1,$2,$3,NOW())`
 	// now you have the has
 	_, err = m.DB.Exec(stmt, name, email, string(HasedPassword))
 	if err != nil {
@@ -28,7 +28,7 @@ func (m *UserModel) Insert(name, email, password string) error {
 func (m *UserModel) Authenticate(email, password string) (int, error) {
 	var id int
 	var hashedPassword []byte
-	row := m.DB.QueryRow("SELECT id,hashed_password FROM users WHERE email = ?", email)
+	row := m.DB.QueryRow("SELECT id,hashed_password FROM users WHERE email = $1", email)
 	err := row.Scan(&id, &hashedPassword)
 	if err == sql.ErrNoRows {
 		return 0, models.ErrInvalidCredentials
@@ -48,7 +48,7 @@ func (m *UserModel) Authenticate(email, password string) (int, error) {
 
 func (m *UserModel) Get(id int) (*models.User, error) {
 	s := &models.User{}
-	stmt := `SELECT id,name,email,created FROM users WHERE id = ?`
+	stmt := `SELECT id,name,email,created FROM users WHERE id = $1`
 	err := m.DB.QueryRow(stmt, id).Scan(&s.ID, &s.Name, &s.Email, &s.Created)
 
 	if err == sql.ErrNoRows {
