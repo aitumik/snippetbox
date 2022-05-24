@@ -5,24 +5,24 @@ services:
 # Application
   snippetbox:
     container_name: snippetbox
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "5000:5000"
     depends_on:
-      - database
-    links:
-      - "database:db"
+      - postgres
     env_file: .env
 
 # Database
-  database:
-    image: postgres
-    hostname: db
-    volumes:
-      - pgdata:/var/lib/postgresql/data/snippetbox
-    ports:
-      - "5432:5432"
+  postgres:
     env_file: .env
+    image: "postgres"
+    hostname: "postgres"
+    ports:
+        - "5432:5432"
+    volumes:
+        - pgdata:/var/lib/postgresql/data
 
   elasticsearch:
     image: "docker.elastic.co/elasticsearch/elasticsearch:7.10.2"
@@ -35,6 +35,7 @@ services:
       - esdata:/usr/share/elasticsearch/data
     env_file: .env
 
+
 # Adminer
   adminer:
     container_name: adminer
@@ -43,9 +44,7 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - database
-    links:
-      - database
+      - postgres
  
 # Volumes
 volumes:

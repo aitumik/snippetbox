@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"os"
 	"time"
-  "fmt"
 
 	"github.com/aitumik/snippetbox/pkg"
 	"github.com/aitumik/snippetbox/pkg/models"
