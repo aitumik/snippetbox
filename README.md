@@ -49,16 +49,12 @@ Make sure you have installed docker
 cd snippetbox
 ```
 
-Build the image
+Build and Run
 ```
-docker build -t snippetbox
+docker-compose up -d
 ```
 
-Run the image
-```
-docker run -p 4000:4000 snippetbox
-```
-Open your browser and visit https://localhost:4000
+Open your browser and visit https://localhost:5000
 
 > Notice the https in the above URL
 
@@ -66,16 +62,17 @@ Open your browser and visit https://localhost:4000
 - [ ] Oauth2 for authentication
 - [ ] Redis for caching (we mostly do reads,writes are minimum)
 - [ ] Kibana for analytics and visualization of data
+- [ ] Setup CI/CD
 
 ### In Progress
 - [ ] Add search capabilities by integrating with elasticsearch
-- [ ] Switch to postgres database
 
 ### Done ✓
 - [x] Cache templates for faster rendering
 - [x] Request logging middleware implemented
 - [x] Panic recovery middleware
 - [x] Add middlewares
+- [x] Switch to postgres database
 - [x] Dockerize the application
 
 # Tools
@@ -86,7 +83,3 @@ Open your browser and visit https://localhost:4000
 
 # Contributing
 Create a pull request to be able to contribute to this project
-
-
-
-
