@@ -1,6 +1,8 @@
 package postgres
 
 import (
+  "time"
+  "strconv"
 	"database/sql"
 	"github.com/aitumik/snippetbox/pkg/models"
 )
@@ -11,12 +13,27 @@ type SnippetModel struct {
 
 // Insert This will insert a new snippet into the database
 func (s *SnippetModel) Insert(title, content, expires string) (int, error) {
-	return 0, nil
+  var id int
+  normExpires,err := strconv.Atoi(expires)
+  if err != nil {
+    return 0,err
+  }
+
+  createdAt := time.Now()
+  expiresAt := createdAt.AddDate(0,0,normExpires)
+  stmt := `INSERT INTO snippets( title, content,created,expires) VALUES($1,$2,NOW(),$3) RETURNING id`
+
+  err = s.DB.QueryRow(stmt,title,content,expiresAt).Scan(&id)
+  if err != nil {
+    return 0,nil
+  }
+  // returns int64
+	return int(id), nil
 }
 
 // Get this will return specific snippet based on id
 func (s *SnippetModel) Get(id int) (*models.Snippet, error) {
-	stmt := `SELECT id,title,content,created,expires FROM snippets WHERE expires > UTC_TIMESTAMP() AND id = $1`
+	stmt := `SELECT id,title,content,created,expires FROM snippets WHERE expires > NOW() AND id = $1`
 
 	// use the query row to execute the SQL statement
 	row := s.DB.QueryRow(stmt, id)
