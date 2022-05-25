@@ -19,7 +19,9 @@ docker-compose up -d
 ```
 
 [Snippetbox](http://localhost:5000)
+![Snippetbox Screenshot](/screenshots/image.png "screenshot of the homepage").
 [Adminer](http://localhost:8080)
+![Adminer Screenshot](/screenshots/adminer.png "screenshot of adminer").
 
 
 ### Todo
