@@ -20,7 +20,6 @@ type contextKey string
 
 var contextKeyUser = contextKey("user")
 
-
 type application struct {
 	errorLogger *log.Logger
 	infoLogger  *log.Logger
@@ -52,12 +51,12 @@ func main() {
 
 	// Postgresql credentials
 
-	cfg,err := pkg.NewConfig()
+	cfg, err := pkg.NewConfig()
 	if err != nil {
 		errorLogger.Fatal(err)
 	}
 	dsn := cfg.DatabaseURI
-	conn,err := gorm.Open(psql.Open(dsn),&gorm.Config{})
+	conn, err := gorm.Open(psql.Open(dsn), &gorm.Config{})
 	//conn, err := gorm.Open(sqlite.Open("snippet.db"), dbConfig)
 
 	db, err := conn.DB()
@@ -114,9 +113,9 @@ func main() {
 	//}
 
 	server := &http.Server{
-		Addr:         cfg.Addr,
-		ErrorLog:     errorLogger,
-		Handler:      mux,
+		Addr:     cfg.Addr,
+		ErrorLog: errorLogger,
+		Handler:  mux,
 		//TLSConfig:    tlsConfig,
 		IdleTimeout:  time.Minute,
 		ReadTimeout:  5 * time.Second,

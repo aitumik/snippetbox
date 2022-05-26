@@ -1,10 +1,10 @@
 package postgres
 
 import (
-  "time"
-  "strconv"
 	"database/sql"
 	"github.com/aitumik/snippetbox/pkg/models"
+	"strconv"
+	"time"
 )
 
 type SnippetModel struct {
@@ -13,21 +13,21 @@ type SnippetModel struct {
 
 // Insert This will insert a new snippet into the database
 func (s *SnippetModel) Insert(title, content, expires string) (int, error) {
-  var id int
-  normExpires,err := strconv.Atoi(expires)
-  if err != nil {
-    return 0,err
-  }
+	var id int
+	normExpires, err := strconv.Atoi(expires)
+	if err != nil {
+		return 0, err
+	}
 
-  createdAt := time.Now()
-  expiresAt := createdAt.AddDate(0,0,normExpires)
-  stmt := `INSERT INTO snippets( title, content,created,expires) VALUES($1,$2,NOW(),$3) RETURNING id`
+	createdAt := time.Now()
+	expiresAt := createdAt.AddDate(0, 0, normExpires)
+	stmt := `INSERT INTO snippets( title, content,created,expires) VALUES($1,$2,NOW(),$3) RETURNING id`
 
-  err = s.DB.QueryRow(stmt,title,content,expiresAt).Scan(&id)
-  if err != nil {
-    return 0,nil
-  }
-  // returns int64
+	err = s.DB.QueryRow(stmt, title, content, expiresAt).Scan(&id)
+	if err != nil {
+		return 0, nil
+	}
+	// returns int64
 	return int(id), nil
 }
 
