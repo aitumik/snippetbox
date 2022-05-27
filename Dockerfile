@@ -1,4 +1,4 @@
-FROM golang:1.17.5-alpine
+FROM golang:1.17.5-alpine AS development
 
 MAINTAINER aitumik@protonmail.com
 
@@ -18,6 +18,8 @@ COPY tls ./build
 # Install gcc dependencies
 RUN apk add git alpine-sdk build-base gcc
 
+
+FROM development AS production
 
 # Expose port 4000
 EXPOSE 4000
