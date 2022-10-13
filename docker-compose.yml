@@ -1,7 +1,6 @@
 version: "3.7"
 
 services:
-
 # Application
   snippetbox:
     container_name: snippetbox
@@ -15,7 +14,6 @@ services:
     env_file: .env
     volumes:
       - ./:/snippetbox
-
 # Database
   postgres:
     env_file: .env
@@ -25,35 +23,16 @@ services:
         - "5432:5432"
     volumes:
         - pgdata:/var/lib/postgresql/data
-
-#  elasticsearch:
-#    image: "docker.elastic.co/elasticsearch/elasticsearch:7.10.2"
-#    environment:
-#      - discovery.type=single-node
-#      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-#    ports:
-#      - "9200:9200"
-#    volumes:
-#      - esdata:/usr/share/elasticsearch/data
-#    env_file: .env
-
-
 # Adminer
-  adminer:
-    container_name: adminer
+  admner:
+    container_name: admner
     image: dockette/adminer
     restart: always
     ports:
-      - "8080:80"
+      - "8085:80"
     depends_on:
       - postgres
- 
 # Volumes
 volumes:
-  esdata:
-    driver: local
   pgdata:
     driver: local
-
-    
-
