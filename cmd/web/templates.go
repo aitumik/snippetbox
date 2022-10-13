@@ -1,11 +1,12 @@
 package main
 
 import (
-	"github.com/aitumik/snippetbox/pkg/forms"
-	"github.com/aitumik/snippetbox/pkg/models"
 	"html/template"
 	"path/filepath"
 	"time"
+
+	"github.com/aitumik/snippetbox/pkg/forms"
+	"github.com/aitumik/snippetbox/pkg/models"
 )
 
 type TemplateData struct {
@@ -18,6 +19,7 @@ type TemplateData struct {
 	CSRFToken         string
 }
 
+// NewTemplateCache returns a new TemplateCache
 func NewTemplateCache(dir string) (map[string]*template.Template, error) {
 	cache := map[string]*template.Template{}
 

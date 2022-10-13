@@ -2,12 +2,14 @@ package main
 
 import (
 	"database/sql"
-	"github.com/aitumik/snippetbox/pkg/models/postgres"
+	"flag"
 	"html/template"
 	"log"
 	"net/http"
 	"os"
 	"time"
+
+	"github.com/aitumik/snippetbox/pkg/models/postgres"
 
 	"github.com/aitumik/snippetbox/pkg"
 	"github.com/aitumik/snippetbox/pkg/models"
@@ -40,24 +42,26 @@ type application struct {
 
 func main() {
 
-	//flag.StringVar(&cfg.Addr, "addr", ":4000", "HTTP Network Address")
-	//flag.StringVar(&cfg.StaticDir, "static-dir", "./ui/static", "Path to static assets")
-	//flag.StringVar(&cfg.SecretKey, "secret", "s6Ndh+pPbnzHbS*+9Pk8qGWhTzbpa@ge", "Secret Key")
-	//flag.Parse()
-
-	// create loggers
 	infoLogger := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	errorLogger := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile|log.Llongfile)
-
-	// Postgresql credentials
 
 	cfg, err := pkg.NewConfig()
 	if err != nil {
 		errorLogger.Fatal(err)
 	}
+
+	flag.StringVar(&cfg.Addr, "addr", ":4000", "HTTP Network Address")
+	flag.StringVar(&cfg.StaticDir, "static-dir", "./ui/static", "Path to static assets")
+	flag.StringVar(&cfg.SecretKey, "secret", "s6Ndh+pPbnzHbS*+9Pk8qGWhTzbpa@ge", "Secret Key")
+	flag.Parse()
+
+	cfg, err = pkg.NewConfig()
+	if err != nil {
+		errorLogger.Fatal(err)
+	}
+
 	dsn := cfg.DatabaseURI
 	conn, err := gorm.Open(psql.Open(dsn), &gorm.Config{})
-	//conn, err := gorm.Open(sqlite.Open("snippet.db"), dbConfig)
 
 	db, err := conn.DB()
 	if err != nil {
@@ -71,7 +75,6 @@ func main() {
 		}
 	}(db)
 
-	// Initialize a new template cache
 	templateCache, err := NewTemplateCache("./ui/html/")
 	if err != nil {
 		errorLogger.Fatal(err)
