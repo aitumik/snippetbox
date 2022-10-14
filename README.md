@@ -1,5 +1,5 @@
 # Snippetbox
-Learning Go Web app development with a project.
+Snippetbox is a golang application for curating snippets
 
 ## Docker Setup
 
@@ -11,6 +11,45 @@ git clone https://github.com/aitumik/snippetbox
 Make sure you have installed docker
 ```
 cd snippetbox
+```
+
+Here is the `docker-compose.yaml`
+```yaml
+# Application
+  snippetbox:
+    container_name: snippetbox
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    depends_on:
+      - postgres
+    env_file: .env
+    volumes:
+      - ./:/snippetbox
+# Database
+  postgres:
+    env_file: .env
+    image: "postgres"
+    hostname: "postgres"
+    ports:
+        - "5432:5432"
+    volumes:
+        - pgdata:/var/lib/postgresql/data
+# Adminer
+  admner:
+    container_name: admner
+    image: dockette/adminer
+    restart: always
+    ports:
+      - "8085:80"
+    depends_on:
+      - postgres
+# Volumes
+volumes:
+  pgdata:
+    driver: local
 ```
 
 Build and Run
@@ -46,5 +85,4 @@ docker-compose up -d
 * Elasticsearch
 
 # Coverage
-
 

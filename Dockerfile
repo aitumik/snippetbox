@@ -1,7 +1,5 @@
 FROM golang:1.17.5-alpine AS development
 
-MAINTAINER aitumik@protonmail.com
-
 # Set the neccessary environment variables
 ENV G0111MODULE=on
 ENV CGO_ENABLED 0
@@ -24,9 +22,6 @@ RUN --mount=type=cache,target=/go/pkg/mod/cache \
       --mount=type=cache,target=/go-build \
       go build -o sniper cmd/web/*
 
-# Install gcc dependencies
-#RUN apk add git alpine-sdk build-base gcc
-
 CMD ["./sniper"]
 
 FROM development AS production
@@ -36,6 +31,8 @@ COPY --from=gloursdocker/docker / /
 CMD ["go", "run", "cmd/web/*"]
 
 FROM scratch
-COPY --from=development /app/sniper /usr/bin/sniper
-CMD ["/usr/bin/sniper"]
+COPY --from=production /app/sniper /usr/bin/sniper
+COPY --from=production /app/ui /ui
+COPY --from=production /app/.env .env
 
+CMD ["/usr/bin/sniper"]

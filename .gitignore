@@ -25,6 +25,9 @@ tls/
 # Swap files
 *.swp
 
+# Kubernetes
+k8s/
 
+# binaries
 snippetbox
 sniper

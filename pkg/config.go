@@ -2,9 +2,10 @@ package pkg
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/joho/godotenv"
 	log "github.com/sirupsen/logrus"
-	"os"
 )
 
 type Config struct {
@@ -16,8 +17,8 @@ type Config struct {
 
 func (c *Config) GetVarFromEnv(envName string) (env string, err error) {
 	env, exists := os.LookupEnv(envName)
-	if exists == false {
-		err = fmt.Errorf("env variable %s is not set", envName)
+	if !exists {
+		err = fmt.Errorf("config: env variable %s is not set", envName)
 	}
 	return
 }

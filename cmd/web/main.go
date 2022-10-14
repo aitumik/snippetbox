@@ -62,6 +62,9 @@ func main() {
 
 	dsn := cfg.DatabaseURI
 	conn, err := gorm.Open(psql.Open(dsn), &gorm.Config{})
+	if err != nil {
+		errorLogger.Fatal(err)
+	}
 
 	db, err := conn.DB()
 	if err != nil {
