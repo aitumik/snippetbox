@@ -15,7 +15,7 @@ type Config struct {
 	DatabaseURI string
 }
 
-func (c *Config) GetVarFromEnv(envName string) (env string, err error) {
+func (c *Config) getVarFromEnv(envName string) (env string, err error) {
 	env, exists := os.LookupEnv(envName)
 	if !exists {
 		err = fmt.Errorf("config: env variable %s is not set", envName)
@@ -28,22 +28,22 @@ func (c *Config) loadEnvVariables() error {
 	if err != nil {
 		return err
 	}
-	c.StaticDir, err = c.GetVarFromEnv("STATIC_DIR")
+	c.StaticDir, err = c.getVarFromEnv("STATIC_DIR")
 	if err != nil {
 		log.Error(err)
 		return err
 	}
-	c.SecretKey, err = c.GetVarFromEnv("SECRET_KEY")
+	c.SecretKey, err = c.getVarFromEnv("SECRET_KEY")
 	if err != nil {
 		log.Error(err)
 		return err
 	}
-	c.Addr, err = c.GetVarFromEnv("APP_ADDR")
+	c.Addr, err = c.getVarFromEnv("APP_ADDR")
 	if err != nil {
 		log.Error(err)
 		return err
 	}
-	c.DatabaseURI, err = c.GetVarFromEnv("DATABASE_URI")
+	c.DatabaseURI, err = c.getVarFromEnv("DATABASE_URI")
 	if err != nil {
 		log.Error(err)
 		return err
